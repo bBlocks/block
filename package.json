@@ -1,0 +1,31 @@
+{
+  "name": "@bblocks/block",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "umd": "node ./node_modules/umd/bin/cli.js block block.js block.umd.js",
+	"pack": "node ./node_modules/uglify-js/bin/uglifyjs block.umd.js -c -m -o block.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bBlocks/block.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bBlocks/block/issues"
+  },
+  "homepage": "https://github.com/bBlocks/block#readme",
+  "dependencies": {
+    "custom-event-polyfill": "^0.3.0",
+    "document-register-element": "^1.5.0",
+    "es6-object-assign": "^1.1.0",
+    "promise-polyfill": "^6.0.2"
+  },
+  "devDependencies": {
+    "uglify-js": "^3.0.15",
+    "umd": "^3.0.1"
+  }
+}
