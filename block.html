@@ -3,9 +3,7 @@
 
 <head>
 	<title>Block</title>
-	<script src="node_modules/es6-object-assign/dist/object-assign-auto.js"></script>
-	<script src="node_modules/custom-event-polyfill/custom-event-polyfill.js"></script>
-	<script src="node_modules/document-register-element/build/document-register-element.js"></script>
+	<script src="block.polyfills.min.js"></script>
 	<script src="block.umd.js"></script>
 </head>
 
@@ -17,7 +15,7 @@
 		var el = new myElement();
 		el.innerHTML = 'test';
 		document.body.appendChild(el);
-
+		alert(1);
 
 		//
 		var zs = (function(zs) {

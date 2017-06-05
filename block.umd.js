@@ -264,7 +264,7 @@ Object.assign(feature.prototype, {
 	is: null,
 	tag: null,
 	parent: null,
-	properties: null, 	// 	
+	properties: null, 		
 	events: null,
 	observedAttributes: null,	
 });
