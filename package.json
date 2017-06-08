@@ -1,24 +1,29 @@
 {
-  "name": "@bblocks/block",
+  "name": "@bblocks/component",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "watch": "npm-watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "umd": "node ./node_modules/umd/bin/cli.js block block.js block.umd.js",
-    "min": "node ./node_modules/uglify-js/bin/uglifyjs block.umd.js -c -m -o block.min.js",
-    "min.poly": "node ./node_modules/uglify-js/bin/uglifyjs ./node_modules/es6-object-assign/dist/object-assign-auto.js ./node_modules/custom-event-polyfill/custom-event-polyfill.js ./node_modules/document-register-element/build/document-register-element.js -c -m -o block.polyfills.min.js"
+    "umd": "node ./node_modules/umd/bin/cli.js bb component.js component.umd.js",
+    "min": "node ./node_modules/uglify-js/bin/uglifyjs component.umd.js -c -m -o component.min.js",
+    "min.poly": "node ./node_modules/uglify-js/bin/uglifyjs ./node_modules/es6-object-assign/dist/object-assign-auto.js ./node_modules/custom-event-polyfill/custom-event-polyfill.js ./node_modules/document-register-element/build/document-register-element.js -c -m -o component.polyfills.min.js"
+  },
+  "watch": {
+    "min": "component.js",
+    "umd": "component.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bBlocks/block.git"
+    "url": "git+https://github.com/bBlocks/component.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bBlocks/block/issues"
+    "url": "https://github.com/bBlocks/component/issues"
   },
-  "homepage": "https://github.com/bBlocks/block#readme",
+  "homepage": "https://github.com/bBlocks/component#readme",
   "dependencies": {
     "custom-event-polyfill": "^0.3.0",
     "document-register-element": "^1.5.0",
@@ -27,6 +32,7 @@
   },
   "devDependencies": {
     "jasmine": "^2.6.0",
+    "npm-watch": "^0.1.9",
     "uglify-js": "^3.0.15",
     "umd": "^3.0.1"
   }

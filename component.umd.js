@@ -1,10 +1,9 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.block = f()}})(function(){var define,module,exports;
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.bb = f()}})(function(){var define,module,exports;
 'use strict';
 var helpers =  {
-	// Babel helpers
-	_classCallCheck: function(instance, Constructor) { if (!(instance instanceof Constructor)) { throw "Cannot call a class as a function"; } },
-	_possibleConstructorReturn: function(self, call) { if (!self) { throw "this hasn't been initialised - super() hasn't been called"; } return call && (typeof call === "object" || typeof call === "function") ? call : self; },
-	_inherits: function(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw "Super expression must either be null or a function, not " + typeof superClass; } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; },
+	classCallCheck: function(instance, Constructor) { if (!(instance instanceof Constructor)) { throw "Cannot call a class as a function"; } },
+	possibleConstructorReturn: function(self, call) { if (!self) { throw "this hasn't been initialised - super() hasn't been called"; } return call && (typeof call === "object" || typeof call === "function") ? call : self; },
+	inherits: function(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw "Super expression must either be null or a function, not " + typeof superClass; } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; },
 	addCustomEvent: function (obj, eventType, eventHandler) {
 		if (!obj.eventHandlers) { obj.eventHandlers = {}; }
 		if (!obj.eventHandlers[eventType]) {
@@ -50,7 +49,7 @@ var helpers =  {
 				behaviors = [behaviors];
 			}
 			for (var i=0;i<behaviors.length;i++) {
-				helpers.addBehavior(elementClass, behaviors[i]);
+				helpers.addFeature(elementClass, behaviors[i]);
 			}
 		}
 
@@ -100,7 +99,7 @@ var helpers =  {
 		}
 		
 		var elementClass = function (_parentClass) {
-			helpers._inherits(elementClass, _parentClass);
+			helpers.inherits(elementClass, _parentClass);
 			
 			// Clone event handlers			
 			if (_parentClass.prototype.eventHandlers) {
@@ -115,9 +114,9 @@ var helpers =  {
 			function elementClass(self) {
 				var _this;
 
-				helpers._classCallCheck(this, elementClass);
+				helpers.classCallCheck(this, elementClass);
 
-				var self = (_this = helpers._possibleConstructorReturn(this, (elementClass.__proto__ || Object.getPrototypeOf(elementClass)).call(this, self)), _this);
+				var self = (_this = helpers.possibleConstructorReturn(this, (elementClass.__proto__ || Object.getPrototypeOf(elementClass)).call(this, self)), _this);
 
 				// Add event listeners
 				
@@ -165,7 +164,7 @@ var helpers =  {
 				behaviors = [behaviors];
 			}
 			for (var i in behaviors) {
-				helpers.addBehavior(elementClass.prototype, behaviors[i]);
+				helpers.addFeature(elementClass.prototype, behaviors[i]);
 			}
 		}
 
@@ -190,7 +189,7 @@ var helpers =  {
 		customElements.define(isWhat, elementClass, params);
 		return elementClass;
 	},
-	addBehavior: function (obj, properties) {
+	addFeature: function (obj, properties) {
 		var events, propertyDescriptors, i;
 		if (!properties) { return; }
 
@@ -229,7 +228,7 @@ var helpers =  {
 	}
 }
 
-var block = function() {
+var component = function() {
 	'use strict';
 	var features = arguments;
 	
@@ -264,14 +263,14 @@ Object.assign(feature.prototype, {
 	is: null,
 	tag: null,
 	parent: null,
-	properties: null, 		
+	properties: null, 	// 	
 	events: null,
 	observedAttributes: null,	
 });
 
 
 return {
-	block: block,
+	component: component,
 	feature: feature,
 	helpers: helpers
 };

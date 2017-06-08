@@ -1,19 +1,28 @@
-var bb = block;
 describe('feature', function() {
-		
+	it('A constructor for features', function() {
+		expect(typeof bb.feature).toBe('function');
+		var feature = new bb.feature({
+			test: 1
+		}, {
+			test: 2,
+			prop: 3
+		});
+		expect(feature.events).toBeNull();
+		expect(feature.test).toBe(2);
+		expect(feature.prop).toBe(3);
+	});
 });
-describe("block", function () {
-
-	it("a helper function to create DOM elements", function () {
+describe("component", function () {
+	it("Creats a custom DOM element", function () {
 		expect(typeof bb).toBe('object');
-		expect(typeof bb.block).toBe('function');
-		var MyElement = bb.block({parent: HTMLElement, is: 'my-element1'});
+		expect(typeof bb.component).toBe('function');
+		var MyElement = bb.component({parent: HTMLElement, is: 'my-element1'});
 		expect(typeof MyElement).toBe('function');
 		var elem = new MyElement();
 		expect(elem instanceof HTMLElement).toBeTruthy();
 
 		// Basic example 
-		var MyElement11 = bb.block({parent: HTMLElement, is: 'my-element11'}, {
+		var MyElement11 = bb.component({parent: HTMLElement, is: 'my-element11'}, {
 			properties: { // Use this object to declare properties and use setters and getters see more https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
 				value: {
 					get: function () {
@@ -24,14 +33,13 @@ describe("block", function () {
 					}
 				}
 			}
-
 		});
 		var elem = new MyElement11();
 		elem.value = 'test';
 		console.log(elem.value); // 'test set' is expected
 	
 		// How to syncronize attributes
-		var MyElement12 = bb.block({parent: HTMLElement, is: 'my-element12'}, {
+		var MyElement12 = bb.component({parent: HTMLElement, is: 'my-element12'}, {
 			setValue: function (str) {
 				var newValue;
 				if (str) {
@@ -84,7 +92,7 @@ describe("block", function () {
 	it('supports custom tags', function() {
 		// ES5 
 		var flag = '';
-		var elementClass = bb.block({
+		var elementClass = bb.component({
 			parent: HTMLElement, 
 			is: 'test-element',  
 			events: {
@@ -93,54 +101,15 @@ describe("block", function () {
 				}
 			}
 		}); 
-		
-
-		
-		// ES6
-		/*
-		class elementClass extends HTMLElement {
-			constructor(self) {
-				self = super(self);
-				self.innerHTML = 'my custom tag';
-				return self;
-			}
-		}
-		*/
-		// Babel
-		/*
-		function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-		function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-		function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-		var elementClass = function (_HTMLElement) {
-			_inherits(elementClass, _HTMLElement);
-
-			function elementClass(self) {
-				var _this, _ret;
-
-				_classCallCheck(this, elementClass);
-
-				self = (_this = _possibleConstructorReturn(this, (elementClass.__proto__ || Object.getPrototypeOf(elementClass)).call(this, self)), _this);
-				self.innerHTML = 'my custom tag';
-				return _ret = self, _possibleConstructorReturn(_this, _ret);
-			}
-
-			return elementClass;
-		}(HTMLElement); 
-		*/
-
-		//customElements.define('test-element', elementClass);
+	
 		var elem = document.createElement('test-element');
-		//var elem = new elementClass();
 		document.body.appendChild(elem);		
 		expect(flag).toBe('created');
 		document.body.removeChild(elem);
 	});
 
 	it('can extend native elements', function() {
-		var elementClass = bb.block({
+		var elementClass = bb.component({
 			parent: HTMLButtonElement, 
 			is: 'my-button', 
 			tag: 'button', 
@@ -175,8 +144,8 @@ describe("block", function () {
 		document.body.removeChild(elem);
 	});
 
-	it('can add behaviors', function () {
-		expect(typeof bb.helpers.addBehavior).toBe('function');
+	it('can add features', function () {
+		expect(typeof bb.helpers.addFeature).toBe('function');
 		expect(typeof bb.helpers.addCustomEvent).toBe('function');
 		
 		var obj = {
@@ -218,8 +187,8 @@ describe("block", function () {
 			}
 		}
 
-		bb.helpers.addBehavior(obj, behavior);
-		bb.helpers.addBehavior(obj, behavior2);
+		bb.helpers.addFeature(obj, behavior);
+		bb.helpers.addFeature(obj, behavior2);
 		
 
 		// Support event handlers
@@ -246,7 +215,7 @@ describe("block", function () {
 		var elem, delay, attrTime, attrTime2, renderTime, nChanges = 0, nExpected = 10, nChanges2 = 0, elem2;
 
 		// Through custom elements helper
-		var MyElement = bb.block({
+		var MyElement = bb.component({
 			parent: HTMLElement, 
 			is: 'my-element3', 
 			observedAttributes: ['value'],
@@ -336,7 +305,7 @@ describe("block", function () {
 
 
 	
-		MyElement = bb.block({
+		MyElement = bb.component({
 			parent: HTMLElement, 
 			is: 'my-element2'}, behavior);
 	

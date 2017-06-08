@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Component</title>
+	<script src="component.polyfills.min.js"></script>
+	<script src="component.umd.js"></script>
+</head>
+
+<body>
+
+	<script>
+		var f1 = new bb.feature({ test: 1 }, { test: 2, do: 3 }, 1, null, function () { });
+		var myElement = bb.component(f1, { tag: 'my-element' });
+		var el = new myElement();
+		el.innerHTML = 'test';
+		document.body.appendChild(el);
+		var form = {
+			getFields: function () {
+				return this.querySelectorAll('input,button,select,textarea');
+			},
+
+			events: {	// Through events object we can attach hooks to lifecycle methods of an element and other custom or native events
+				create: function () {
+					console.log('created');
+				},
+				attach: function () {
+					//this.el = this.appendChild(document.createElement('form'));
+					console.log('attached');
+				},
+				detach: function () {
+					console.log('detached');
+				},
+				attributeChange: function (attributeName) {
+					console.log('attribute changed', attributeName);
+				},
+				submit: function (e) {
+					console.log('zs-form submit');
+					e.preventDefault();
+				}
+			}
+		}
+
+		var formElement = bb.component(form, { parent: HTMLFormElement, is: 'zs-form', tag: 'form' });
+		var form = new formElement();
+		document.body.appendChild(form);
+		console.log(form.getFields());
+
+	</script>
+
+</body>
+
+</html>
