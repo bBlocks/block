@@ -48,7 +48,7 @@ describe("component", function () {
 					newValue = '';
 				}
 
-				// Sync with attribure
+				// Sync with attribute
 				if (newValue != this.getAttribute('value')) {
 					this.setAttribute('value', newValue);
 				}
@@ -320,7 +320,7 @@ describe("component", function () {
 			setTimeout(function () { done(); }, 0);
 		});
 	
-		it('lifecycle events create, attach, detach and attribureChange', function () {
+		it('lifecycle events create, attach, detach and attributeChange', function () {
 			expect(element.flag).toBe('createattachattributeChangedetach');
 			expect(element2.flag).toBe('create'); 
 			expect(attributeName).toBe('test');

@@ -42,16 +42,6 @@ var helpers =  {
 			elementClass.eventHandlers = clonedHandlers;
 		}
 
-		// Attach behaviors
-		if (behaviors) {
-			if (!behaviors.length) { // Can't use Array.isArray because when useing argumnets
-				behaviors = [behaviors];
-			}
-			for (var i=0;i<behaviors.length;i++) {
-				helpers.addFeature(elementClass, behaviors[i]);
-			}
-		}
-
 		// Lifecycle
 		elementClass.createdCallback = function () {
 			// Add event listeners
@@ -78,6 +68,16 @@ var helpers =  {
 			var event = new CustomEvent('attributeChange', { detail: { attributeName: attributeName } });
 			this.dispatchEvent(event);
 		};
+
+		// Attach behaviors
+		if (behaviors) {
+			if (!behaviors.length) { // Can't use Array.isArray because when useing argumnets
+				behaviors = [behaviors];
+			}
+			for (var i=0;i<behaviors.length;i++) {
+				helpers.addFeature(elementClass, behaviors[i]);
+			}
+		}
 
 		var params = {
 			prototype: elementClass
