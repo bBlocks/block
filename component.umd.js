@@ -1,8 +1,14 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.bb = f()}})(function(){var define,module,exports;
+/**
+ * @module componet
+ * ...
+ */
 'use strict';
 var helpers =  {
-	classCallCheck: function(instance, Constructor) { if (!(instance instanceof Constructor)) { throw "Cannot call a class as a function"; } },
-	possibleConstructorReturn: function(self, call) { if (!self) { throw "this hasn't been initialised - super() hasn't been called"; } return call && (typeof call === "object" || typeof call === "function") ? call : self; },
+	classCallCheck: function(instance, Constructor) { 
+		if (!(instance instanceof Constructor)) { throw "Cannot call a class as a function"; } 
+	},
+	possibleConstructorReturn: function(self, call) {if (!self) { throw "this hasn't been initialised - super() hasn't been called"; } return call && (typeof call === "object" || typeof call === "function") ? call : self; },
 	inherits: function(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw "Super expression must either be null or a function, not " + typeof superClass; } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; },
 	addCustomEvent: function (obj, eventType, eventHandler) {
 		if (!obj.eventHandlers) { obj.eventHandlers = {}; }
@@ -13,21 +19,6 @@ var helpers =  {
 			obj.eventHandlers[eventType].push(eventHandler);
 		}
 		return obj.eventHandlers[eventType];
-	},
-	debounce: function (func, wait, immediate) { // taken from http://underscorejs.org/#debounce, but modified to support canceling
-		var timeout;
-		return function () {
-			var context = this, args = arguments;
-			var later = function () {
-				timeout = null;
-				if (!immediate) func.apply(context, args);
-			};
-			var callNow = immediate && !timeout;
-			clearTimeout(timeout);
-			timeout = setTimeout(later, wait);
-			if (callNow) { func.apply(context, args); return null; }
-			return timeout;
-		};
 	},
 	registerElement: function(parentClass, isWhat, tag, behaviors) {	// v0 spec implementation using https://github.com/WebReflection/document-register-element 	
 
@@ -72,7 +63,7 @@ var helpers =  {
 
 		// Attach behaviors
 		if (behaviors) {
-			if (!behaviors.length) { // Can't use Array.isArray because when useing argumnets
+			if (!behaviors.length) { // Can't use Array.isArray 
 				behaviors = [behaviors];
 			}
 			for (var i=0;i<behaviors.length;i++) {
@@ -130,6 +121,9 @@ var helpers =  {
 				// Trigger create
 				var event = new CustomEvent('create');
 				self.dispatchEvent(event);
+				if (typeof self.createdCallback == 'function') {
+					self.createdCallback();
+				}
 
 				return self;
 			}
@@ -194,8 +188,8 @@ var helpers =  {
 		if (!properties) { return; }
 
 		// Clone events
-		if (properties.events) {
-			events = Object.assign({}, properties.events);
+		if (properties.on) {
+			events = Object.assign({}, properties.on);
 		}
 
 		Object.assign(obj, properties); // IE11 need a polyfill
@@ -205,7 +199,7 @@ var helpers =  {
 			for (i in events) {
 				this.addCustomEvent(obj, i, events[i]);
 			}
-			delete obj.events;
+			delete obj.on;
 		}
 
 		// Handle observed attributes
@@ -217,8 +211,8 @@ var helpers =  {
 		}
 
 		// Handle properties getters and setters
-		if (properties.properties) {
-			propertyDescriptors = Object.assign({}, properties.properties);
+		if (properties.define) {
+			propertyDescriptors = Object.assign({}, properties.define);
 			Object.defineProperties(obj, propertyDescriptors);
 		}
 	},
@@ -228,6 +222,9 @@ var helpers =  {
 	}
 }
 
+/**
+ * @constructor component
+ */
 var component = function() {
 	'use strict';
 	var features = arguments;
@@ -263,11 +260,10 @@ Object.assign(feature.prototype, {
 	is: null,
 	tag: null,
 	parent: null,
-	properties: null, 	// 	
+	properties: null,
 	events: null,
 	observedAttributes: null,	
 });
-
 
 return {
 	component: component,

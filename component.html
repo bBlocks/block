@@ -11,7 +11,23 @@
 
 	<script>
 		var f1 = new bb.feature({ test: 1 }, { test: 2, do: 3 }, 1, null, function () { });
-		var myElement = bb.component(f1, { tag: 'my-element' });
+		var myElement = bb.component(f1, { tag: 'my-element', events: {
+			create: function() {
+				console.log('my-element', 'created');
+			}
+		} });
+		class myChildElement extends myElement {
+			constructor() {
+				super();
+			}
+			connectedCallback() {
+				this.innerHTML = 'my-child-element';
+			}
+
+		}
+		customElements.define('my-child-element', myChildElement);
+		var childEl = new myChildElement();
+		document.body.appendChild(childEl)
 		var el = new myElement();
 		el.innerHTML = 'test';
 		document.body.appendChild(el);
@@ -20,7 +36,7 @@
 				return this.querySelectorAll('input,button,select,textarea');
 			},
 
-			events: {	// Through events object we can attach hooks to lifecycle methods of an element and other custom or native events
+			events: {// Through events object we can attach hooks to lifecycle methods of an element and other custom or native events
 				create: function () {
 					console.log('created');
 				},
@@ -40,7 +56,7 @@
 				}
 			}
 		}
-
+		
 		var formElement = bb.component(form, { parent: HTMLFormElement, is: 'zs-form', tag: 'form' });
 		var form = new formElement();
 		document.body.appendChild(form);

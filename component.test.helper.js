@@ -6,12 +6,15 @@ function canDeclareCustomElement(expect, isWhat, tag, elementConstructor, parent
 
 	if (isWhat && tag) {
 		container.innerHTML = '<' + tag + ' is="' + isWhat + '"></' + tag + '>';
+		document.body.appendChild(container);
+		var elem = container.querySelector(tag);
 	} else if (isWhat) {
 		container.innerHTML = '<' + isWhat + '></' + isWhat + '>';
+		document.body.appendChild(container);
+		var elem = container.querySelector(isWhat);
 	}
 
-	document.body.appendChild(container);
-	var elem = container.querySelector(tag);
+	
 	expect(elem == null).toBeFalsy();
 	expect(elem instanceof HTMLElement).toBeTruthy();
 	if (elementConstructor) {
@@ -53,7 +56,7 @@ function isCustomElement(expect, isWhat, tag, elementConstructor, parentElement)
 }
 
 
-function isBehavior(expect, behavior) {
-	expect(typeof behavior).toBe('object');
-	expect(behavior == null).toBeFalsy();
+function isFeature(expect, feature) {
+	expect(typeof feature).toBe('object');
+	expect(feature instanceof bb.feature).toBeTruthy();
 }

@@ -7,12 +7,13 @@
     "watch": "npm-watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "umd": "node ./node_modules/umd/bin/cli.js bb component.js component.umd.js",
+	"umd-dom": "node ./node_modules/umd/bin/cli.js bb dom.js dom.umd.js",
     "min": "node ./node_modules/uglify-js/bin/uglifyjs component.umd.js -c -m -o component.min.js",
     "min.poly": "node ./node_modules/uglify-js/bin/uglifyjs ./node_modules/es6-object-assign/dist/object-assign-auto.js ./node_modules/custom-event-polyfill/custom-event-polyfill.js ./node_modules/document-register-element/build/document-register-element.js -c -m -o component.polyfills.min.js"
   },
   "watch": {
-    "min": "component.js",
-    "umd": "component.js"
+	"umd": "component.js",
+	"min": "component.js"
   },
   "repository": {
     "type": "git",

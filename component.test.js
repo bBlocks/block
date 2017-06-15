@@ -17,13 +17,13 @@ describe("component", function () {
 		expect(typeof bb).toBe('object');
 		expect(typeof bb.component).toBe('function');
 		var MyElement = bb.component({parent: HTMLElement, is: 'my-element1'});
-		expect(typeof MyElement).toBe('function');
-		var elem = new MyElement();
-		expect(elem instanceof HTMLElement).toBeTruthy();
+		isCustomElement(expect, 'my-element1', null, MyElement, HTMLElement);		
+	});
 
+	it('Can sync properties and attributes', function () {
 		// Basic example 
 		var MyElement11 = bb.component({parent: HTMLElement, is: 'my-element11'}, {
-			properties: { // Use this object to declare properties and use setters and getters see more https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+			define: { // Use this object to declare properties and use setters and getters see more https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
 				value: {
 					get: function () {
 						return this._value;
@@ -58,7 +58,7 @@ describe("component", function () {
 			getValue: function () {
 				return this._value || '';
 			},
-			properties: {
+			define: {
 				value: {
 					get: function () {
 						console.log('getter');
@@ -85,9 +85,7 @@ describe("component", function () {
 		elem.setAttribute('value', '2');
 		console.log(elem.value); // '2' is expected
 
-
-		
-	});
+	})
 	
 	it('supports custom tags', function() {
 		// ES5 
@@ -95,7 +93,7 @@ describe("component", function () {
 		var elementClass = bb.component({
 			parent: HTMLElement, 
 			is: 'test-element',  
-			events: {
+			on: {
 				create: function() {
 					flag = 'created';
 				}
@@ -113,7 +111,7 @@ describe("component", function () {
 			parent: HTMLButtonElement, 
 			is: 'my-button', 
 			tag: 'button', 
-			events: {
+			on: {
 				create: function() {
 					this.innerHTML = 'my custom button';
 				}
@@ -162,12 +160,12 @@ describe("component", function () {
 			method2: function() {
 
 			},
-			events: {
+			on: {
 				test: function () {
 
 				}
 			},
-			properties: {
+			define: {
 				prop3: {
 					set: function (value) {
 						this._prop3 = value + '_setter';
@@ -180,7 +178,7 @@ describe("component", function () {
 		};
 
 		var behavior2 = {
-			events: {
+			on: {
 				test: function () {
 
 				}
@@ -194,8 +192,8 @@ describe("component", function () {
 		// Support event handlers
 		expect(typeof obj.eventHandlers).toBe('object');
 		expect(Array.isArray(obj.eventHandlers['test'])).toBeTruthy();
-		expect(obj.eventHandlers['test'][0]).toBe(behavior.events.test);
-		expect(obj.eventHandlers['test'][1]).toBe(behavior2.events.test);
+		expect(obj.eventHandlers['test'][0]).toBe(behavior.on.test);
+		expect(obj.eventHandlers['test'][1]).toBe(behavior2.on.test);
 
 		// Extend with properties and method
 		expect(obj.prop).toBe(1);
@@ -219,7 +217,7 @@ describe("component", function () {
 			parent: HTMLElement, 
 			is: 'my-element3', 
 			observedAttributes: ['value'],
-			events: {
+			on: {
 				attributeChange: function () {
 					nChanges++;
 					console.log('ZS attribute change', 'delay', performance.now() - attrTime, 'changes', nChanges, 'value', this.getAttribute('value'));
@@ -283,7 +281,7 @@ describe("component", function () {
 		var behavior = {
 			flag: '',
 			observedAttributes: ['test'],
-			events: {
+			on: {
 				clear: function(e) {
 					this.flag += 'clear' + e.detail;
 				},
