@@ -1,14 +1,27 @@
 /**
- * @module componet
- * ...
+ * Component module
+ * @version 0.1.0
  */
+
 'use strict';
-var helpers =  {
-	classCallCheck: function(instance, Constructor) { 
-		if (!(instance instanceof Constructor)) { throw "Cannot call a class as a function"; } 
-	},
+
+/**
+ * Utils
+ * @namespace 
+ */
+var utils =  {
+
+	classCallCheck: function(instance, Constructor) {if (!(instance instanceof Constructor)) { throw "Cannot call a class as a function"; }},
 	possibleConstructorReturn: function(self, call) {if (!self) { throw "this hasn't been initialised - super() hasn't been called"; } return call && (typeof call === "object" || typeof call === "function") ? call : self; },
 	inherits: function(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw "Super expression must either be null or a function, not " + typeof superClass; } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; },
+	
+	/**
+	 * Adds an event handler to a componet
+	 * @param {object} obj - Target object
+	 * @param {string} eventType - Name of the event
+	 * @param {function} eventHandler - Event handler
+	 * @return {object} - Object with a list of defined event handlers
+	 */
 	addCustomEvent: function (obj, eventType, eventHandler) {
 		if (!obj.eventHandlers) { obj.eventHandlers = {}; }
 		if (!obj.eventHandlers[eventType]) {
@@ -19,7 +32,16 @@ var helpers =  {
 		}
 		return obj.eventHandlers[eventType];
 	},
-	registerElement: function(parentClass, isWhat, tag, behaviors) {	// v0 spec implementation using https://github.com/WebReflection/document-register-element 	
+
+	/**
+	 * Register custom element in the DOM using V0 spec
+	 * @param {function} [HTMLElement] prarentClass - Constructor or class of the element
+	 * @param {string} isWhat - Name for the component. Could be used as tag name or "is" attribute
+	 * @param {string=} tag - Tag name of the element. Required when extending native elements
+	 * @param {object|array} feature - One or more features to have
+	 * @return {function} - Constructor of registered element
+	 */
+	registerElement: function(parentClass, isWhat, tag, features) {	// v0 spec implementation using https://github.com/WebReflection/document-register-element 	
 
 		var elementClass = Object.create(parentClass.prototype);
 
@@ -60,13 +82,13 @@ var helpers =  {
 			this.dispatchEvent(event);
 		};
 
-		// Attach behaviors
-		if (behaviors) {
-			if (!behaviors.length) { // Can't use Array.isArray 
-				behaviors = [behaviors];
+		// Attach features
+		if (features) {
+			if (!features.length) { // Can't use Array.isArray 
+				features = [features];
 			}
-			for (var i=0;i<behaviors.length;i++) {
-				helpers.addFeature(elementClass, behaviors[i]);
+			for (var i=0;i<features.length;i++) {
+				utils.addFeature(elementClass, features[i]);
 			}
 		}
 
@@ -81,15 +103,19 @@ var helpers =  {
 
 		return elementConstructor;
 	},
-	defineElement: function(parentClass, isWhat, tag, behaviors) { // v1 spec implementation using https://github.com/WebReflection/document-register-element 	
+
+	/**
+	 * Define custom element in the DOM using V1 spec
+	 * @param {function=} prarentClass [HTMLElement] - Constructor or class of an element to be extended
+	 * @param {string} isWhat - Name for the component. Could be used as tag name or "is" attribute
+	 * @param {string=} tag - Tag name of the element. Required when extending native elements
+	 * @param {object|array} feature - One or more features to have
+	 * @return {function} - Constructor of registered element
+	 */
+	defineElement: function(parentClass, isWhat, tag, features) { // v1 spec implementation using https://github.com/WebReflection/document-register-element 	
 		var params, attributesToObserve = [];
-		// Switch between v0 spec or v1 spec implementation
-		if (!window.customElements) {
-			return helpers.registerElement(parentClass, isWhat, tag, behaviors);
-		}
-		
 		var elementClass = function (_parentClass) {
-			helpers.inherits(elementClass, _parentClass);
+			utils.inherits(elementClass, _parentClass);
 			
 			// Clone event handlers			
 			if (_parentClass.prototype.eventHandlers) {
@@ -104,9 +130,9 @@ var helpers =  {
 			function elementClass(self) {
 				var _this;
 
-				helpers.classCallCheck(this, elementClass);
+				utils.classCallCheck(this, elementClass);
 
-				var self = (_this = helpers.possibleConstructorReturn(this, (elementClass.__proto__ || Object.getPrototypeOf(elementClass)).call(this, self)), _this);
+				var self = (_this = utils.possibleConstructorReturn(this, (elementClass.__proto__ || Object.getPrototypeOf(elementClass)).call(this, self)), _this);
 
 				// Add event listeners
 				
@@ -151,13 +177,13 @@ var helpers =  {
 			this.dispatchEvent(event);
 		};
 
-		// Add behaviors
-		if (behaviors) {
-			if (!behaviors.length) {
-				behaviors = [behaviors];
+		// Add features
+		if (features) {
+			if (!features.length) {
+				features = [features];
 			}
-			for (var i in behaviors) {
-				helpers.addFeature(elementClass.prototype, behaviors[i]);
+			for (var i in features) {
+				utils.addFeature(elementClass.prototype, features[i]);
 			}
 		}
 
@@ -182,6 +208,11 @@ var helpers =  {
 		customElements.define(isWhat, elementClass, params);
 		return elementClass;
 	},
+
+	/**
+	 * Adds a feature to the component
+	 * @param {object} obj - Target object. Usually a prototype of a component. Properties "on", "define", "observedAttribute" will be stacked.
+	 */
 	addFeature: function (obj, properties) {
 		var events, propertyDescriptors, i;
 		if (!properties) { return; }
@@ -222,7 +253,9 @@ var helpers =  {
 }
 
 /**
- * @constructor component
+ * Define a component and register in the DOM
+ * @param {object} [...] One or more features to have in the component. Features will be mixed. At least one of the features needs to have "is" proeprty defined. 
+ * @return Constructor for elements
  */
 var component = function() {
 	'use strict';
@@ -236,20 +269,32 @@ var component = function() {
 	var props = feature.apply(null, arguments);
 	var isWhat = props.is;
 	var tag = props.tag;
-	var parentClass = props.parent;
+	var parentClass = props.extends;
 
 	if (!parentClass) {parentClass = HTMLElement;}
 	if (tag && !isWhat) {isWhat = tag; tag = null;};
-	if (!tag && !isWhat) {helpers.warn('Name not specified'); return;} 
-	return helpers.defineElement(parentClass, isWhat, tag, arguments);
+	if (!tag && !isWhat) {utils.warn('Name not specified'); return;} 
+	if (props.polyfill == 'v0') {
+		return utils.registerElement(parentClass, isWhat, tag, arguments);
+	} else {
+		return utils.defineElement(parentClass, isWhat, tag, arguments);
+	}
+	
 }
 
+
+/**
+ * Created a feature from one or more objects
+ * @constructor
+ * @params {object} [...] 
+ * @return {object} Created a feature. Each feature could have special properties like "is", "tag", "extends", "observedAttributes", "on", "define" used to define components
+*/
 var feature = function() {
 	'use strict';
 	var self = this || {};
 	if (arguments.length) {
 		for (var i = 0; i<arguments.length; i++) {
-			if (typeof arguments[i] != 'object') {helpers.warn('Expected object in argument #' + i); continue;}
+			if (typeof arguments[i] != 'object') {utils.warn('Expected object in argument #' + i); continue;}
 			Object.assign(self, arguments[i]);
 		}
 	}
@@ -258,14 +303,14 @@ var feature = function() {
 Object.assign(feature.prototype, {
 	is: null,
 	tag: null,
-	parent: null,
-	properties: null,
-	events: null,
+	extends: null,
+	define: null,
+	on: null,
 	observedAttributes: null,	
 });
 
 return {
 	component: component,
 	feature: feature,
-	helpers: helpers
+	utils: utils
 };

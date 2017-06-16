@@ -7,7 +7,7 @@ describe('feature', function() {
 			test: 2,
 			prop: 3
 		});
-		expect(feature.events).toBeNull();
+		expect(feature.on).toBeNull();
 		expect(feature.test).toBe(2);
 		expect(feature.prop).toBe(3);
 	});
@@ -16,13 +16,13 @@ describe("component", function () {
 	it("Creats a custom DOM element", function () {
 		expect(typeof bb).toBe('object');
 		expect(typeof bb.component).toBe('function');
-		var MyElement = bb.component({parent: HTMLElement, is: 'my-element1'});
+		var MyElement = bb.component({extends: HTMLElement, is: 'my-element1'});
 		isCustomElement(expect, 'my-element1', null, MyElement, HTMLElement);		
 	});
 
 	it('Can sync properties and attributes', function () {
 		// Basic example 
-		var MyElement11 = bb.component({parent: HTMLElement, is: 'my-element11'}, {
+		var MyElement11 = bb.component({extends: HTMLElement, is: 'my-element11'}, {
 			define: { // Use this object to declare properties and use setters and getters see more https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
 				value: {
 					get: function () {
@@ -39,7 +39,7 @@ describe("component", function () {
 		console.log(elem.value); // 'test set' is expected
 	
 		// How to syncronize attributes
-		var MyElement12 = bb.component({parent: HTMLElement, is: 'my-element12'}, {
+		var MyElement12 = bb.component({extends: HTMLElement, is: 'my-element12'}, {
 			setValue: function (str) {
 				var newValue;
 				if (str) {
@@ -91,7 +91,7 @@ describe("component", function () {
 		// ES5 
 		var flag = '';
 		var elementClass = bb.component({
-			parent: HTMLElement, 
+			extends: HTMLElement, 
 			is: 'test-element',  
 			on: {
 				create: function() {
@@ -108,7 +108,7 @@ describe("component", function () {
 
 	it('can extend native elements', function() {
 		var elementClass = bb.component({
-			parent: HTMLButtonElement, 
+			extends: HTMLButtonElement, 
 			is: 'my-button', 
 			tag: 'button', 
 			on: {
@@ -143,8 +143,8 @@ describe("component", function () {
 	});
 
 	it('can add features', function () {
-		expect(typeof bb.helpers.addFeature).toBe('function');
-		expect(typeof bb.helpers.addCustomEvent).toBe('function');
+		expect(typeof bb.utils.addFeature).toBe('function');
+		expect(typeof bb.utils.addCustomEvent).toBe('function');
 		
 		var obj = {
 			prop: 1,
@@ -185,8 +185,8 @@ describe("component", function () {
 			}
 		}
 
-		bb.helpers.addFeature(obj, behavior);
-		bb.helpers.addFeature(obj, behavior2);
+		bb.utils.addFeature(obj, behavior);
+		bb.utils.addFeature(obj, behavior2);
 		
 
 		// Support event handlers
@@ -214,7 +214,7 @@ describe("component", function () {
 
 		// Through custom elements helper
 		var MyElement = bb.component({
-			parent: HTMLElement, 
+			extends: HTMLElement, 
 			is: 'my-element3', 
 			observedAttributes: ['value'],
 			on: {
@@ -304,7 +304,7 @@ describe("component", function () {
 
 	
 		MyElement = bb.component({
-			parent: HTMLElement, 
+			extends: HTMLElement, 
 			is: 'my-element2'}, behavior);
 	
 		beforeEach(function (done) {
@@ -336,5 +336,11 @@ describe("component", function () {
 		});
 	});
 
-	
+	describe('utils', function() {
+
+	});
+
+	describe('polyfills', function() {
+		xit('coverd in https://github.com/WebReflection/document-register-element', function() {})
+	})
 });
