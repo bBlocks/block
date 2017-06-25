@@ -3,67 +3,46 @@
 
 <head>
 	<title>Component</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<script src="component.polyfills.min.js"></script>
 	<script src="component.js"></script>
 </head>
 
 <body>
+	<div class="container" role="main">
+		<h1 class="page-header">Building blocks library. Component module</h1>
+		<h2>Example</h2>
+		<my-form>
+			<input type="text"/>
+		</my-form>
+		<script>
+			
+			// Create a feature
+			var formGetFields = bb.feature({
+				getFields: function () {
+					return this.querySelectorAll('input,button,select,textarea');
+				}				
+			});
 
-	<script>
-		var f1 = new bb.feature({ test: 1 }, { test: 2, do: 3 }, 1, null, function () { });
-		var myElement = bb.component(f1, { tag: 'my-element', events: {
-			create: function() {
-				console.log('my-element', 'created');
-			}
-		} });
-		class myChildElement extends myElement {
-			constructor() {
-				super();
-			}
-			connectedCallback() {
-				this.innerHTML = 'my-child-element';
-			}
-
-		}
-		customElements.define('my-child-element', myChildElement);
-		var childEl = new myChildElement();
-		document.body.appendChild(childEl)
-		var el = new myElement();
-		el.innerHTML = 'test';
-		document.body.appendChild(el);
-		var form = {
-			getFields: function () {
-				return this.querySelectorAll('input,button,select,textarea');
-			},
-
-			events: {// Through events object we can attach hooks to lifecycle methods of an element and other custom or native events
-				create: function () {
-					console.log('created');
-				},
-				attach: function () {
-					//this.el = this.appendChild(document.createElement('form'));
-					console.log('attached');
-				},
-				detach: function () {
-					console.log('detached');
-				},
-				attributeChange: function (attributeName) {
-					console.log('attribute changed', attributeName);
-				},
-				submit: function (e) {
-					console.log('zs-form submit');
-					e.preventDefault();
-				}
-			}
-		}
-		
-		var formElement = bb.component(form, { parent: HTMLFormElement, is: 'zs-form', tag: 'form' });
-		var form = new formElement();
-		document.body.appendChild(form);
-		console.log(form.getFields());
-
-	</script>
-
+			// Define a form component
+			var myFormComponent = bb.component(formGetFields, { 
+				tag: 'my-form', 
+				on: {
+					create: function() {
+						console.log('my-form', 'created');
+					},
+					attach: function() {
+						var fields = this.getFields();
+						if (fields[0]) {
+							fields[0].value = 'Hello!';
+						}
+					}
+				} 
+			});			
+		</script>
+	</div>
 </body>
 
 </html>
