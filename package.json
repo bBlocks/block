@@ -5,7 +5,7 @@
   "main": "component.js",
   "scripts": {
     "watch": "npm-watch",
-    "doc": "./node_modules/.bin/jsdoc component.js -d api/",
+    "doc": "./node_modules/.bin/jsdoc component.js -d docs/api/",
     "min": "node ./node_modules/uglify-js/bin/uglifyjs component.js -c -m -o component.min.js",
     "min.poly": "node ./node_modules/uglify-js/bin/uglifyjs ./node_modules/es6-object-assign/dist/object-assign-auto.js ./node_modules/custom-event-polyfill/custom-event-polyfill.js ./node_modules/document-register-element/build/document-register-element.js -c -m -o component.polyfills.min.js"
   },

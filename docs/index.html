@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>bb.component Demo</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+	<script src="https://rawgit.com/bBlocks/component/master/component.polyfills.min.js"></script>
+	<script src="https://rawgit.com/bBlocks/component/master/component.min.js"></script>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Building Blocks. Component. Demo <img align="right" alt="bBlocks" src="https://github.com/bBlocks/component/raw/master/block.png?raw=true" width="100"></h1>
+		<ul class="nav nav-pills">
+			<li role="presentation"><a href="https://github.com/bBlocks/component">Repository</a></li>
+			<li role="docs"><a href="api/index.html">Documentation</a></li>
+		</ul>
+
+		<h2>Custom form element</h2>
+		<form>
+			<my-field-element class="form-control" label="My field" type="text"></my-field-element>
+		</form>
+
+		<script>
+			/**
+			 *  Define custom field element
+			 */
+			var fieldElement = bb.component({
+				is: 'my-field-element',
+				input: null,
+				render: function () {
+					this.innerHTML = '\
+					<label>' + this.getAttribute('label') + '</label>\
+					<input type="' + this.getAttribute('type') + '" class="form-control" value="' + (this.getAttribute('value') || '') +'"/>';
+					this.classList.add('form-group');
+					this.style.display = "block";
+					this.style.height = "auto";
+					this.input = this.querySelector('input');
+				},
+				on: {
+					attach: function () {
+						this.render();
+					}
+				}
+
+			});
+		</script>
+
+		<h2>Adding features</h2>
+		<form>
+			<my-field-clear-element class="form-control" label="My field with clear" type="text" value="some value"></my-field-clear-element>
+		</form>
+
+		<script>
+
+			/**
+			 * Display clear icon when field is not empty
+			 */
+			var clearFeature = new bb.feature({
+				clearIcon: null,
+				renderClear: function () {
+					var comp = this;
+					if (!this.clearIcon) {
+						this.clearIcon = this.querySelector('button');
+						if (!this.clearIcon) {
+							this.clearIcon = document.createElement('button');
+							this.clearIcon.innerHTML = '<span aria-hidden="true">&times;</span>';
+							this.clearIcon.setAttribute('type', 'button');
+							this.clearIcon.setAttribute('class', 'close');
+							this.style.position = 'relative';
+							Object.assign(this.clearIcon.style, {
+								position: 'absolute',
+								right: '18px',
+								bottom: '12px',
+								display: 'none'
+							});
+							this.clearIcon.addEventListener('click', function() {
+								comp.input.value = '';
+								comp.value = '';
+								var event = new CustomEvent('change'); // Let's inform others about the change
+								comp.dispatchEvent(event); 
+							});
+							this.appendChild(this.clearIcon);							
+						}
+					}
+
+					// Show of hide clear icon?
+					if (this.input && this.input.value) {
+						this.clearIcon.style.display = 'block';
+					} else {
+						this.clearIcon.style.display = 'none';
+					}
+				},
+				on: {
+					attach: function () {
+						this.renderClear();
+					},
+					change: function() {
+						this.renderClear();
+					}
+				}
+			});
+
+			/**
+			 * Extend fieldElement to add clear feature
+			 */
+			var fieldClearElement = bb.component(clearFeature, {
+				extends: fieldElement,
+				is: 'my-field-clear-element'
+			});
+
+		</script>
+
+		<h2>Extending native elements</h2>
+		<form>
+			<div class="well">
+				<button type="button" is="my-custom-button" class="btn btn-primary">Toggle loading</button>
+			</div>
+		</form>	
+		<script>
+			/**
+			 * Display spinner
+			 */
+			var loadingFeature = new bb.feature({
+				loadingIcon: null,
+				loading: function() {
+					if (!this.loadingIcon) {
+						this.loadingIcon = this.querySelector('img');
+						if (!this.loadingIcon) {
+							this.loadingIcon =document.createElement('img');
+							this.loadingIcon.src = 'loader.svg';
+							this.style.position = 'relative';
+							Object.assign(this.loadingIcon.style, {
+								position: 'absolute',
+								bottom: '0',
+								left: '50%',
+								marginLeft: '-15px',
+								width: '30px'
+							});
+							this.appendChild(this.loadingIcon);
+						}
+					}
+
+					if (this.isLoading) {
+						this.loadingIcon.style.display = 'block';
+						this.style.opacity = '0.5';
+					} else {
+						this.loadingIcon.style.display = 'none';
+						this.style.opacity = '1';
+					}
+
+				},
+				_isLoading: false,
+				define: { 
+					isLoading: {
+						get: function() {
+							return this._isLoading;
+						},
+						set: function(newValue) {
+							this._isLoading = newValue;
+							this.loading();
+						}
+					}
+				}
+
+			});
+
+			/**
+			 * Extend button element and add loading feature
+			 */
+			var myCustomButton = bb.component({
+				is: 'my-custom-button',
+				tag: 'button',
+				extends: HTMLButtonElement,
+				on: {
+					click: function() {
+						this.isLoading = !this.isLoading;
+					}
+				}
+			}, loadingFeature);
+
+		</script>
+		
+		<h2>Handle attributes</h2>
+		<form class="well">
+			<my-mixed-element class="form-control" label="With validation and clear" type="text" id="element">
+
+				
+			</my-mixed-element>
+
+			<button id="change" class="btn btn-default">Set some value</button>
+			
+			<div class="form-group" id="existing">
+				<label>Existing field can use validation too</label>
+				<input type="text" class="form-control">
+			</div>
+		</form>
+		<script>
+			/**
+			 *  Validation
+			 */
+			var validation = bb.feature({
+				isValid: null,
+				validate: function() {
+					if (!this.input) {
+						this.input = this.querySelector('input');
+					}
+					this.isValid = !!this.input.value;
+					if (!this.isValid) {
+						this.classList.add('has-error');
+					} else {
+						this.classList.remove('has-error');
+					}
+					return this.isValid;
+				},
+				on: {
+					change: function() {
+						this.validate();
+					},
+					attach: function() {
+						this.validate();
+					}
+				}
+			});
+
+			/**
+			 * Define component with mixed features and handle value attribute
+			 */
+			var myMixedElement = bb.component(clearFeature, validation, {
+				is: 'my-mixed-element',
+				extends: fieldElement,
+				_value: null,
+				observedAttributes: ['value'],
+				on: {
+					attributeChange: function(event) { // Sync attribute "value" and property "value"
+						console.log('attribute change', this._value, this.value, this.getAttribute('value'), event);
+						if (event.detail.attributeName == 'value') {
+							var newValue = this.getAttribute('value');
+							if (newValue != this.value) {
+								this.value = newValue; 
+							}
+
+							if (this.input.value != newValue) { // Sync input value too
+								this.input.value = newValue;
+							}
+
+						}
+					}
+				},
+				define: { // getters and setters for "value" property
+					value: {
+						get: function() {
+							return this._value;
+						},
+						set: function(newValue) {
+							console.log('value set', this.value, newValue, this.getAttribute('value'));						
+							this._value = newValue;
+							if (this.getAttribute('value') != newValue) { // sync with value attribute
+								this.setAttribute('value', newValue);
+							}
+
+							if (this.input.value != newValue) {
+								this.input.value = newValue;
+							}
+							
+							// Inform everybody
+							this.dispatchEvent(new CustomEvent('change'));
+						}
+					}
+				}
+
+			});
+
+			// Handle button click to set some value
+			document.querySelector('#change').addEventListener('click', function(e) {
+				var el =document.querySelector('#element');
+				el.setAttribute('value','some value');
+				e.preventDefault();
+			});
+		
+			// We can apply features to existing native elements
+			var el  = document.querySelector('#existing');
+			Object.assign(el, validation);
+			// But we can't use lifecycle events this way
+			el.addEventListener('change', function() {
+				this.validate();
+			});
+			el.validate();
+		</script>
+
+
+	</div>
+
+</body>
+
+</html>

@@ -8,6 +8,7 @@ template
 node_modules
 examples
 api
+docs
 .npmignore
 .gitignore
-build/*.amd.js
+build

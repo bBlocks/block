@@ -9,40 +9,25 @@
 	<script src="component.polyfills.min.js"></script>
 	<script src="component.js"></script>
 </head>
-
 <body>
-	<div class="container" role="main">
-		<h1 class="page-header">Building blocks library. Component module</h1>
-		<h2>Example</h2>
-		<my-form>
-			<input type="text"/>
-		</my-form>
-		<script>
-			
-			// Create a feature
-			var formGetFields = bb.feature({
-				getFields: function () {
-					return this.querySelectorAll('input,button,select,textarea');
-				}				
-			});
-
-			// Define a form component
-			var myFormComponent = bb.component(formGetFields, { 
-				tag: 'my-form', 
-				on: {
-					create: function() {
-						console.log('my-form', 'created');
-					},
-					attach: function() {
-						var fields = this.getFields();
-						if (fields[0]) {
-							fields[0].value = 'Hello!';
-						}
-					}
-				} 
-			});			
-		</script>
-	</div>
+	<h1>Quick demo</h1>
+	<my-field-element class="form-control"></my-field-element>
+	<script>
+		bb.component({
+			is: 'my-field-element',
+			observedAttributes: ['value'],
+			on: {
+				attach: function() {
+					this.innerHTML = 'Hello!';
+					var self = this;
+					self.setAttribute('value', 'test');
+				},
+				attributeChange: function(event) {
+					console.log('change', event.detail, this.getAttribute(event.detail.attributeName));
+				}
+			}
+		});
+	</script>
 </body>
 
 </html>
