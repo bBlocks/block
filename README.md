@@ -1,10 +1,11 @@
-# Building Blocks Component
+# Building Blocks Component 
+<img align="right" alt="bBlocks" src="https://github.com/bBlocks/component/blob/master/block.png?raw=true" width="100"/>
 
 Use the best parts of the Web to build [efficient](https://github.com/bBlocks/sandbox/wiki/Intro) web applications. 
 
-Build you components once and use everywhere. A lightweight and extremenly modular solution. Designed to reduced cost and maximize profit. 
+Build your components once and use everywhere. A lightweight and extremenly modular solution. Designed to reduced costs and maximize profit. 
 
-Reliable. With two simple APIs that would never change. The rest is just your imagination.
+Reliable. [Few simple APIs](https://bblocks.github.io/component/api/bb.html) . Consistent forever. The rest is just your imagination.
 
 ## Quick start
 
@@ -14,7 +15,7 @@ Reliable. With two simple APIs that would never change. The rest is just your im
 npm install @bblocks/component
 ```
 
-* Create an HTML page and place the code
+* Create an HTML page.
 ```HTML
 <!DOCTYPE html>
 <html>
@@ -43,18 +44,20 @@ npm install @bblocks/component
 
 </html>
 ```
-* You now free to build the Web!
+* You are now free to build the Web!
 
-## DEMO
-* [demo]() 
+## Demo
+* [Demo page](https://bblocks.github.io/component/)
+* JSFiddle [example](https://jsfiddle.net/webrealizer/az23mrbz/) 
 
-## API ()
-*
+## Documentation
+* [API](https://bblocks.github.io/component/api/bb.html)
 
-## What is different?
+## Special
+<img align="right" alt="Composition" src="https://github.com/bBlocks/component/blob/master/blocks.png?raw=true" width="200"/>
+
 * Create Features and define Components.
 * Lifecycle events.
 * Extend native DOM elements.
-
-
+* Transpiling is not required.
 
