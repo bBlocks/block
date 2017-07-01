@@ -60,4 +60,4 @@ npm install @bblocks/component
 * Lifecycle events.
 * Extend native DOM elements.
 * Transpiling is not required.
-
+* Supports all modern browsers and IE11.
