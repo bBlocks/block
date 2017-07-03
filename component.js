@@ -2,9 +2,9 @@
 /**
  * Library building blocks 
  * @namespace
- * @version 0.1.0
+ * @version 0.1.2
  */
-var bb = {};
+var bb = bb || {};
 
 (function(bb) {
 	/**

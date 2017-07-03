@@ -12,3 +12,4 @@ docs
 .npmignore
 .gitignore
 build
+*.png
