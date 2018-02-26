@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "jasmine": "^2.6.0",
+    "jquery": "^3.3.1",
     "jsdoc": "^3.4.3",
     "npm-watch": "^0.1.9",
     "uglify-js": "^3.0.15"
