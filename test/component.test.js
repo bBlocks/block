@@ -13,7 +13,7 @@ describe('feature', function() {
 	});
 });
 describe("component", function () {
-	it("Creats a custom DOM element", function () {
+	it("Creates a custom DOM element", function () {
 		expect(typeof bb).toBe('object');
 		expect(typeof bb.component).toBe('function');
 		var MyElement = bb.component({extends: HTMLElement, is: 'my-element1'});

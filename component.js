@@ -39,7 +39,7 @@ var bb = bb || {};
 
 		/**
 		 * Register custom element in the DOM using spec v0
-		 * @param {function} [HTMLElement] prarentClass - Constructor or class of the element
+		 * @param {function} [HTMLElement] parentClass - Constructor or class of the element
 		 * @param {string} isWhat - Name for the component. Could be used as tag name or "is" attribute
 		 * @param {string=} tag - Tag name of the element. Required when extending native elements
 		 * @param {object|array} feature - One or more features to have

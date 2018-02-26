@@ -1,11 +1,21 @@
-<script src="mixin.js"></script>
+<script src="compose.js"></script>
 <script src="node_modules/jquery/dist/jquery.js"></script>
 
 
 <script>
 	var foo = function() {};
 	var obj = {test:1};
+
 	var obj1  = {prop1: 1, prop2: foo, prop3: obj};
+	Object.defineProperty(obj1, 'prop5', {
+		set: function(newValue) {
+			this._prop5 = newValue;
+		},
+		get: function() {
+			return this._prop5 + 10;
+		}
+	});
+
 	var obj2 = {prop2: 2};
 	Object.defineProperty(obj2, 'prop4', {
 		set: function(newValue) {
@@ -16,12 +26,14 @@
 		}
 	});
 
-	var obj3 = mixin(Object.create(obj1), obj2);
+	var obj3 = compose(Object.create(obj1), obj2);
 
 
 	var obj4 = $.extend(Object.create(obj1), obj2);
 
+	var obj5 = inherit(obj1, obj2);
+
 	obj3.prop4 = 1;
 	obj4.prop4 = 1;
-	console.log(obj3, obj4);
+	console.log(obj3, obj4, obj5);
 </script>
