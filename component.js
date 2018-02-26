@@ -295,7 +295,7 @@ var bb = bb || {};
 
 
 	/**
-	 * Created a feature from one or more objects
+	 * Create a feature from one or more objects
 	 * @constructor
 	 * @memberof bb 
 	 * @param {object} [...] 
