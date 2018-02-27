@@ -1,39 +1,121 @@
-<script src="compose.js"></script>
-<script src="node_modules/jquery/dist/jquery.js"></script>
+<!DOCTYPE html>
+<html>
 
+<head>
+	<title>Component</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">	<script src="compose.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+	<script src="node_modules/jquery/dist/jquery.js"></script>
 
-<script>
-	var foo = function() {};
-	var obj = {test:1};
-
-	var obj1  = {prop1: 1, prop2: foo, prop3: obj};
-	Object.defineProperty(obj1, 'prop5', {
-		set: function(newValue) {
-			this._prop5 = newValue;
-		},
-		get: function() {
-			return this._prop5 + 10;
+</head>
+<body>
+	<h1>Super power of inheritance and composition</h1>
+	<p>We all know that Objects in Javascript are very powerful.</p>
+	<p>I bet you heard a lot about how you can use about prototypal inheritance and composition.</p>
+	<p>Can we use both efficiently?</p>
+	<h2>Composition</h2>
+	<script>
+		const person = {
+			name: 'Mike'
 		}
-	});
+		const swimming = {
+			swim: function() {
+				console.log(this.name + ' is swimming')
+			}
+		};
 
-	var obj2 = {prop2: 2};
-	Object.defineProperty(obj2, 'prop4', {
-		set: function(newValue) {
-			this._prop4 = newValue + 10;
-		},
-		get: function() {
-			return this._prop4;
-		}
-	});
+		const running = {
+			run: function() {
+				console.log(this.name + ' is running');
+			}
+		};	
 
-	var obj3 = compose(Object.create(obj1), obj2);
+		var athlete = Object.assign({}, person, running, swimming);
+			
+		athlete.run();
+	</script>
+	<p>What if we use setters and getters for that.</p>
+	<script>
+		Object.defineProperty(running, 'isRunning', {
+			set: function(newValue) {
+				this._isRunning = newValue;
+				console.log(this.name + ' is ' + (newValue ? '' : 'not') + ' running');
+			},
+			get: function() {
+				return this._isRunning || false;
+			}
+		});
+
+		athlete = Object.assign({}, person, running, swimming);
+		athlete.isRunning = true;
+
+		var athlete2 = $.extend({}, person, running, swimming);
+		athlete2.name = 'Jane';
+		athlete2.isRunning = true;
+
+		
+	</script>
+	<p>Problem is that Object.assign method won't apply property descriptors to the target object.</p>
+	<p>We can fix that by using Object.defineProperty and Object.getOwnPropertyDescriptor.</p>
+	<script>
+		athlete = Object.assign({}, person, swimming, {name: 'John'});
+		Object.defineProperty(athlete, 'isRunning', Object.getOwnPropertyDescriptor(running, 'isRunning'));
+		athlete.isRunning = true;
+	</script>
+	<p>More elegant solution would be to use a helper function</p>
+	<script>
+		athlete = compose(person, swimming, running, {name: 'Jane'});
+		athlete.isRunning = true;
+	</script>
 
 
-	var obj4 = $.extend(Object.create(obj1), obj2);
+	<table class="table table-striped">
+		<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">First</th>
+			<th scope="col">Last</th>
+			<th scope="col">Handle</th>
+		</tr>
+		</thead>
+		<tbody>
+	
+	</table>
+	<script>
+		var foo = function() {};
+		var obj = {test:1};
 
-	var obj5 = inherit(obj1, obj2);
+		var obj1  = {prop1: 1, prop2: foo, prop3: obj};
+		Object.defineProperty(obj1, 'prop5', {
+			set: function(newValue) {
+				this._prop5 = newValue;
+			},
+			get: function() {
+				return this._prop5 + 10;
+			}
+		});
 
-	obj3.prop4 = 1;
-	obj4.prop4 = 1;
-	console.log(obj3, obj4, obj5);
-</script>
+		var obj2 = {prop2: 2};
+		Object.defineProperty(obj2, 'prop4', {
+			set: function(newValue) {
+				this._prop4 = newValue + 10;
+			},
+			get: function() {
+				return this._prop4;
+			}
+		});
+
+		var obj3 = compose(Object.create(obj1), obj2);
+
+
+		var obj4 = $.extend(Object.create(obj1), obj2);
+
+		var obj5 = inherit(obj1, obj2);
+
+		obj3.prop4 = 1;
+		obj4.prop4 = 1;
+		console.log(obj3, obj4, obj5);
+	</script>
+</body>
