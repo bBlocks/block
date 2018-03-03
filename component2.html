@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Component</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+	<script src="node_modules/jquery/dist/jquery.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/1.7.2/document-register-element.js">/* W3C Custom Elements */</script>
+	<script src="classtrophobic-es5.js"></script>
+	<script src="../compose/compose.js"></script>
+	<script src="component2.js"></script>
+</head>
+
+<body>
+	<h1>Quick demo</h1>
+	<script>
+		MyComponent = component('my-new-element', {
+			test: 1,
+			getObservedAttributes: function() {
+				return ['test'];
+			},
+			onCreate: function() {
+				console.log('created');
+			}, connectedCallback: function() {
+				console.log('attach');
+			},
+			attributeChangedCallback: function() {
+				console.log('attribute change')
+			}
+		});
+		var myElement = new MyComponent();
+		myElement.setAttribute('test',1);
+		document.body.appendChild(myElement);
+	</script>
+	<my-new-element></my-new-element>
+
+</body>
+
+</html>
