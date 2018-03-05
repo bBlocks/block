@@ -17,14 +17,17 @@
 <body>
 	<h1>Quick demo</h1>
 	<script>
-		MyComponent = component('my-new-element', {
+		MyComponent = component(HTMLElement, 'my-new-element', null, {
 			test: 1,
 			getObservedAttributes: function() {
 				return ['test'];
 			},
 			onCreate: function() {
-				console.log('created');
-			}, connectedCallback: function() {
+				
+			}, 
+			
+			connectedCallback: function() {
+				this.innerHTML = 'test';
 				console.log('attach');
 			},
 			attributeChangedCallback: function() {
@@ -34,8 +37,31 @@
 		var myElement = new MyComponent();
 		myElement.setAttribute('test',1);
 		document.body.appendChild(myElement);
+
+		MyButtonComponent = component(HTMLButtonElement, 'my-new-button', 'button', {
+			test: 1,
+			getObservedAttributes: function() {
+				return ['test'];
+			},
+			onCreate: function() {
+				console.log('created');
+				$(this).on('click', function() {
+					alert('test');
+				});
+			}, 
+			connectedCallback: function() {
+				console.log('attach');
+			},
+			attributeChangedCallback: function() {
+				console.log('attribute change')
+			}
+		});
+		var myButton = new MyButtonComponent();
+		myButton.innerHTML = 'test';
+		document.body.appendChild(myButton);
 	</script>
 	<my-new-element></my-new-element>
+	<button is="my-new-button" class="btn btn-primary">Test2</button>
 
 </body>
 
